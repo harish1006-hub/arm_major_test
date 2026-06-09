@@ -1,14 +1,20 @@
 #include<lpc21xx.h>
-#include"fun_decalr.h"
+
 #define lcd 0XF00
 #define rs 1<<12
 #define e 1<<13
 
 
+void lcd_init(void);
+void lcd_int(int );
+void lcd_float(float );
+void lcd_cmd(unsigned char ); 
+void lcd_data(unsigned char );
+void lcd_str(unsigned char*);
 
 void lcd_init(void)
 {
-    IODIR0 = lcd | rs | e ;
+    IODIR0 |= lcd | rs | e ;
     lcd_cmd(0x02);
     lcd_cmd(0x28);
     lcd_cmd(0x0C);
@@ -53,32 +59,32 @@ void lcd_str(unsigned char*s)
 	lcd_data(*s++);
 }
 void lcd_int(int n)
-{
-    unsigned char arr[16];
+{unsigned char arr[16];
     int i = 0;
     if(n == 0)
-    {
-        lcd_data('0');
+    {lcd_data('0');
         return;
     }
-
     if(n < 0)
-    {  lcd_data('-');
+    {
+        lcd_data('-');
         n = -n;
     }
     while(n != 0)
-    {  arr[i++] = n % 10;
-        n /= 10;
-    }
-    while(i > 0)
     {
-        lcd_data(arr[--i] + '0');
+        arr[i++]=n%10;
+        n/=10;
+    }
+    while(i>0)
+    {
+        lcd_data(arr[--i] + 48);
     }
 }
 void lcd_float(float f)
 {
-int temp=f;
+int temp=(int)f;
 lcd_int(temp);
-temp=(f-temp)*100;
+lcd_data('.');
+temp=(int)(f-temp)*100;
 lcd_int(temp);
 }
