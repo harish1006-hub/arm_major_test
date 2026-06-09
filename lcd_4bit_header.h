@@ -53,27 +53,21 @@ void lcd_str(unsigned char*s)
 	lcd_data(*s++);
 }
 void lcd_int(int n)
-{
-    unsigned char arr[16];
-    int i = 0;
-    if(n == 0)
-    {
-        lcd_data('0');
-        return;
-    }
-
-    if(n < 0)
-    {  lcd_data('-');
-        n = -n;
-    }
-    while(n != 0)
-    {  arr[i++] = n % 10;
-        n /= 10;
-    }
-    while(i > 0)
-    {
-        lcd_data(arr[--i] + '0');
-    }
+{unsigned char arr[16];
+char i=0;
+if(n==0)
+lcd_data(0+48);
+else{
+if(n<0)
+{lcd_data('-');
+n=-n;}
+while(n!=0)
+{arr[i++]=(n%10);
+n=n/10;
+}
+for(i=0;i<16;i++)
+lcd_data(arr[i]+48);
+}
 }
 void lcd_float(float f)
 {
